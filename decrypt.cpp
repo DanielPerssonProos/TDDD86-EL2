@@ -4,13 +4,23 @@
 
 #include <iostream>
 #include <chrono>
-#include <set>
+#include <map>
+#include <vector>
 #include "Key.h"
 
 using namespace std;
 
-int
-main(int argc, char* argv[]) {
+pair<Key,vector<vector<int>>> AddToSubsetSum(const pair<Key,vector<vector<int>>> L, Key addedValue, int index) {
+    L.first = L.first + addedValue;
+    for (auto i : L.second) {
+        i.push_back(index);
+    }
+
+   return L;
+
+}
+
+int main(int argc, char* argv[]) {
     unsigned char buffer[C + 1];     // temporary string buffer
     Key candidate = {{0}};         // a password candidate
     Key encrypted;                 // the encrypted password
@@ -35,7 +45,14 @@ main(int argc, char* argv[]) {
     auto begin = chrono::high_resolution_clock::now();
 
     int n = N;
-    set<Key> L;
-    L.insert(KEYinit(0));
+    multimap<Key, vector<int>> L;
 
+    vector<int> tempElement;
+    L.insert(pair<Key,vector<int>>(KEYinit(0), tempElement));
+    for (int i = 0; i < N; ++i) {
+        for (auto it : L){
+            pair<Key,vector<vector<int>>> tempPair = AddToSubsetSum(it, T[i] ,i);
+            L.insert(tempPair);
+        }
+    }
 }

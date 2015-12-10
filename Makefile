@@ -12,6 +12,10 @@ brute: brute.cpp Key.o
 encrypt: encrypt.cpp Key.o
 	$(CCC) $(LFLAGS) -o encrypt encrypt.cpp Key.o
 
+decrypt: decrypt.cpp Key.o
+	$(CCC) $(LFLAGS) -o decrypt decrypt.cpp Key.o
+
+
 Key.o: Key.cpp Key.h
 	$(CCC) -c Key.cpp
 
