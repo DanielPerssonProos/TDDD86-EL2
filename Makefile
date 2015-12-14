@@ -4,7 +4,7 @@
 
 CCC	= g++ -std=c++11 
 
-all: encrypt brute
+all: encrypt brute decrypt
 
 brute: brute.cpp Key.o
 	$(CCC) -O3 $(LFLAGS) -o brute brute.cpp Key.o
