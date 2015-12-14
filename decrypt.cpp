@@ -34,8 +34,14 @@ main(int argc, char* argv[]) {
 
     auto begin = chrono::high_resolution_clock::now();
 
-    int n = N;
+
     set<Key> L;
     L.insert(KEYinit(0));
-
+    for ( int i = 0; i < N; ++i) {
+        L2 = L;
+        for (set<Key>::iterator j = L2.begin(); j != L2.end(); ++j) {
+            *j = T[i]
+        }
+        L.insert()
+    }
 }
