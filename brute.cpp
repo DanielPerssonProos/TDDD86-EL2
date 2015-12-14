@@ -2,6 +2,12 @@
  * Decrypt subset-sum encrypted password using brute force.
  */
 
+#include <map>
+#include <unordered_set>
+#include "Key.h"
+#include <vector>
+
+
 #include <iostream>
 #include <chrono>
 #include "Key.h"
@@ -41,7 +47,7 @@ main(int argc, char* argv[])
     {
       candenc = KEYsubsetsum(candidate, T);
       if (candenc == encrypted)
-	cout << candidate << endl;
+    cout << candidate << endl;
       ++candidate;
     } while (candidate != zero);
 
