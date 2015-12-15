@@ -69,9 +69,17 @@ main(int argc, char* argv[]) {
     multimap<Key, set<int>> Sub1;
 
     set<int> tempElement;
-    Sub1.insert(pair<Key,set<int>>(KEYinit((unsigned char *) "aaaaa"), tempElement));
+    Sub1.insert(pair<Key,set<int>>(KEYinit((unsigned char *) "aaaaaaaa"), tempElement));
 
     multimap<Key, set<int>> temp1;
+    cout << "Before: " << endl;
+    for (auto i = Sub1.begin(); i != Sub1.end(); ++i) {
+        //cout << "Key: " << i->first << ", Elements: ";
+        for (auto elem : i->second) {
+            //cout << ", " << elem;
+        }
+        cout << endl;
+    }
 
 
     for (int i = 0; i < N/2; ++i) {
@@ -80,20 +88,20 @@ main(int argc, char* argv[]) {
             //std::this_thread::sleep_for (std::chrono::seconds(1));
             pair<Key,set<int>> tempPair = AddToSubsetSum(*it, T[i] ,i);
             temp1.insert(tempPair);
-            }
 
+        }
         for(auto it = temp1.begin(); it != temp1.end(); ++it){
             //cout << "Key: " << it->first << ", Elements: ";
             for (auto elem : it->second) {
                 //cout << ", " << elem;
             }
-            // cout << endl;
+            //cout << endl;
             //std::this_thread::sleep_for (std::chrono::milliseconds(100));
             Sub1.insert(*it);
         }
         temp1.clear();
     }
-    cout << "Sub1: " << Sub1.size() << endl;
+    //cout << "Sub1: " << Sub1.size() << endl;
 
 
     vector<string> result;
@@ -123,7 +131,6 @@ main(int argc, char* argv[]) {
                 set<int> tempSet = a.second;
                 tempSet.insert(i->second.begin(), i->second.end());
                 result.push_back(getDecryptedWord(i->first,tempSet));
-                /*
                 cout << "Rows: ";
                 bool firstIteration = true;
                 for (int row : tempSet) {
@@ -136,9 +143,9 @@ main(int argc, char* argv[]) {
                 }
                 cout << endl;
                 cout << "Unencrypted word: " << getDecryptedWord(KEYinit((unsigned char *) "aaaaa"),tempSet) << endl;
-                cout << "Sub1 part: "<< encrypted - a.first << endl;
+                cout << "Sub1 part: "<< i->first << endl;
                 cout << "Sub2 part: "<< a.first << endl;
-                cout << "Encrypted: "<< encrypted << endl << endl;*/
+                cout << "Encrypted: "<< encrypted << endl << endl;
                 tempSet.clear();
             }
 
