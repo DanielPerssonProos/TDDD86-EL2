@@ -1,20 +1,44 @@
 #include <chrono>
 #include <map>
-#include <unordered_set>
+#include <set>
 #include "Key.h"
 #include <vector>
 #include <thread>
+#include <bitset>
 
 using namespace std;
 
-pair<Key,unordered_set<int>> AddToSubsetSum(pair<Key,unordered_set<int>> L, Key addedValue, int index) {
-    cout << "First:  " << L.first << endl;
-    cout << "second: " << addedValue << endl;
+pair<Key,set<int>> AddToSubsetSum(pair<Key,set<int>> L, Key addedValue, int index) {
     L.first = L.first + addedValue;
-    cout << "After:  " << L.first << endl;
     L.second.insert(index);
-   return L;
+    return L;
 
+}
+
+string getDecryptedWord(Key key, set<int> rows) {
+    /*cout << "Rows: ";
+    for (int row : rows) {
+        cout << "," << row;
+    }
+    cout << endl;*/
+    string binaryString = "";
+    for (int i = 0; i < N; ++i) {
+        if (rows.find(i) != rows.end()) {
+            binaryString += "1";
+        } else {
+            binaryString += "0";
+        }
+    }
+    //cout << "Binary string: " << binaryString << endl;
+    string resultString = "";
+    for (int j = 0; j < N; j+=5) {
+        string subSting = binaryString.substr(j,5);
+        //cout << "Substring " << subSting << endl;
+        unsigned int letterValue = bitset<32>(subSting).to_ulong();
+        //cout << letterValue << endl;
+        resultString += ALPHABET[letterValue];
+    }
+    return resultString;
 }
 
 int
@@ -42,84 +66,95 @@ main(int argc, char* argv[]) {
 
     auto begin = chrono::high_resolution_clock::now();
 
-    multimap<Key, unordered_set<int>> Sub1;
+    multimap<Key, set<int>> Sub1;
 
-    unordered_set<int> tempElement;
-    Sub1.insert(pair<Key,unordered_set<int>>(KEYinit((unsigned char *) "aaaaa"), tempElement));
+    set<int> tempElement;
+    Sub1.insert(pair<Key,set<int>>(KEYinit((unsigned char *) "aaaaa"), tempElement));
 
-    multimap<Key, unordered_set<int>> temp1;
+    multimap<Key, set<int>> temp1;
 
 
     for (int i = 0; i < N/2; ++i) {
-        for (auto it : Sub1){
+        cout << "<<New iteration>>" << endl;
+        for (auto it = Sub1.begin(); it != Sub1.end(); ++it){
             //std::this_thread::sleep_for (std::chrono::seconds(1));
-            pair<Key,unordered_set<int>> tempPair = AddToSubsetSum(it, T[i] ,i);
+            pair<Key,set<int>> tempPair = AddToSubsetSum(*it, T[i] ,i);
             temp1.insert(tempPair);
             }
 
-        for(auto a : temp1){
-            Sub1.insert(a);
+        for(auto it = temp1.begin(); it != temp1.end(); ++it){
+            //cout << "Key: " << it->first << ", Elements: ";
+            for (auto elem : it->second) {
+                //cout << ", " << elem;
+            }
+            // cout << endl;
+            //std::this_thread::sleep_for (std::chrono::milliseconds(100));
+            Sub1.insert(*it);
         }
+        temp1.clear();
+    }
+    cout << "Sub1: " << Sub1.size() << endl;
+
+
+    vector<string> result;
+
+    multimap<Key, set<int>> Sub2;
+
+    set<int> tempElement2;
+    Sub2.insert(pair<Key,set<int>>(KEYinit((unsigned char *) "aaaaa"), tempElement2));
+
+
+    auto foundValues = Sub1.equal_range(encrypted);
+    for (auto i = foundValues.first; i != foundValues.second; ++i) {
+        result.push_back(getDecryptedWord(i->first,i->second));
     }
 
-    vector<pair<Key,vector<int>>> result;
-
-    multimap<Key, unordered_set<int>> Sub2;
-
-    unordered_set<int> tempElement;
-    Sub1.insert(pair<Key,unordered_set<int>>(KEYinit((unsigned char *) "aaaaa"), tempElement));
-
-    multimap<Key, unordered_set<int>> temp2;
+    multimap<Key, set<int>> temp2;
     for (int i = N/2; i < N; ++i) {
         for (auto it : Sub2){
             //std::this_thread::sleep_for (std::chrono::seconds(1));
-            pair<Key,unordered_set<int>> tempPair = AddToSubsetSum(it, T[i] ,i);
+            pair<Key,set<int>> tempPair = AddToSubsetSum(it, T[i] ,i);
             temp2.insert(tempPair);
             }
 
         for(auto a : temp2){
-            if (Sub1.find(encrypted-a.first)!= Sub1.end()) {
-                result.push_back(a);
+            foundValues = Sub1.equal_range(encrypted-a.first);
+            for (auto i = foundValues.first; i != foundValues.second; ++i) {
+                set<int> tempSet = a.second;
+                tempSet.insert(i->second.begin(), i->second.end());
+                result.push_back(getDecryptedWord(i->first,tempSet));
+                /*
+                cout << "Rows: ";
+                bool firstIteration = true;
+                for (int row : tempSet) {
+                    if (!firstIteration) {
+                        cout << ",";
+                    } else {
+                        firstIteration = false;
+                    }
+                    cout << row;
+                }
+                cout << endl;
+                cout << "Unencrypted word: " << getDecryptedWord(KEYinit((unsigned char *) "aaaaa"),tempSet) << endl;
+                cout << "Sub1 part: "<< encrypted - a.first << endl;
+                cout << "Sub2 part: "<< a.first << endl;
+                cout << "Encrypted: "<< encrypted << endl << endl;*/
+                tempSet.clear();
             }
+
+
             Sub2.insert(a);
         }
+        temp2.clear();
     }
+    cout << "Sub2: " << Sub2.size() << endl;
 
-    /*
-    vector<string> foundDecryptions;
-    pair<multimap<Key,unordered_set<int>>::iterator,multimap<Key,unordered_set<int>>::iterator> ret;
-    ret = Sub1.equal_range(encrypted);
 
-    cout << Sub1.size() << endl;
-
-*/
-    for (auto itr =ret.first; itr!=ret.second; ++itr){
-        cout << "Found matching key" << endl;
-        int twoPower = 2^4;
-        string decrypted = "";
-        int letter = 0;
-        for(int i = 0; i < N; i++){
-            if (i % 5 == 0 && i != 0) {
-                twoPower = 2^4;
-                decrypted += ALPHABET[letter];
-                letter = 0;
-            }
-            if (itr->second.find(i) != itr->second.end()) {
-                letter += twoPower;
-            }
-            twoPower /= 2;
-
-        }
-        foundDecryptions.push_back(decrypted);
-        decrypted = "";
-    }
 
 
     cout << "Found possible passwords:" << endl;
-    for(int i =0; i < foundDecryptions.size();++i){
-        cout << foundDecryptions[i] << endl;
+    for(int i =0; i < result.size();++i){
+        cout << result[i] << endl;
     }
-
-
-
+    return 0;
 }

@@ -4,6 +4,7 @@
 
 #include <iomanip>
 #include "Key.h"
+#include <vector>
 
 // convert from char to integer 0-31
 Key KEYinit(unsigned char s[]) {
@@ -18,12 +19,23 @@ Key KEYinit(unsigned char s[]) {
 // compute sum of subset of T[i] for which ith bit of k is 1
 Key KEYsubsetsum(const Key& k, const Key T[N])  {
   Key sum = {{0}};
-  for (int i{0}; i < N; ++i)
+  vector<int> rows;
+
+  for (int i{0}; i < N; ++i){
     if (KEYbit(k, i)) {
       sum = sum + T[i];
+      rows.push_back(i);
+
       cout << setw(2) << i << " "; // for debugging
       cout << T[i] << endl;        // for debugging
     }
+  }
+
+  cout << "Rows are: ";
+  for(int i :rows){
+      cout << i << ", ";
+  }
+  cout << endl;
   return sum;
 }
 
