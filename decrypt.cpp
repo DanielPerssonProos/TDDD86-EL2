@@ -94,7 +94,7 @@ main(int argc, char* argv[]) {
     Sub1Vector.push_back(pair<Key,set<int>>(KEYinit((unsigned char *) zeroString.c_str()), tempElement));
 
 
-    for (int i = 0; i < N/2; ++i) {
+    for (int i = 0; i < 24; ++i) {
         cout << "<<New iteration>>" << endl;
         vector<pair<Key,set<int>>> temp1;
         for (vector<pair<Key,set<int>>>::iterator it = Sub1Vector.begin(); it != Sub1Vector.end(); ++it){
@@ -113,6 +113,7 @@ main(int argc, char* argv[]) {
 
     multimap<Key, set<int>> Sub1;
     Sub1.insert(Sub1Vector.begin(), Sub1Vector.end());
+    Sub1Vector.clear();
     cout << "First part done." << endl;
 
     multimap<Key, set<int>> Sub2;
@@ -126,9 +127,8 @@ main(int argc, char* argv[]) {
     }
 
     multimap<Key, set<int>> temp2;
-    for (int i = N/2; i < N; ++i) {
+    for (int i = 20; i < N; ++i) {
         for (auto it : Sub2){
-            //std::this_thread::sleep_for (std::chrono::seconds(1));
             pair<Key,set<int>> tempPair = AddToSubsetSum(it, T[i] ,i);
             temp2.insert(tempPair);
             }
