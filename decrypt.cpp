@@ -5,13 +5,15 @@
 #include <vector>
 #include <thread>
 #include <bitset>
+#include <fstream>
 
 using namespace std;
 
-pair<Key,set<int>> AddToSubsetSum(pair<Key,set<int>> L, Key addedValue, int index) {
-    L.first = L.first + addedValue;
-    L.second.insert(index);
-    return L;
+
+pair<Key,set<int>> AddToSubsetSum(const pair<Key,set<int>>& L, Key& addedValue, int index) {
+    set<int> returnedSet = L.second;
+    returnedSet.insert(index);
+    return pair<Key,set<int>>(L.first + addedValue,returnedSet);
 
 }
 
@@ -41,6 +43,8 @@ string getDecryptedWord(Key key, set<int> rows) {
     return resultString;
 }
 
+
+
 int
 main(int argc, char* argv[]) {
     unsigned char buffer[C + 1];     // temporary string buffer
@@ -50,13 +54,27 @@ main(int argc, char* argv[]) {
     Key zero = {{0}};              // the all zero key
     Key T[N];                      // the table T
 
-
     if (argc != 2) {
         cout << "Usage:" << endl << argv[0] << " password < rand8.txt" << endl;
         return 1;
     }
+/*
+    ofstream myfile;
+    myfile.open ("rand9.txt");
+    for(int k = 0; k < N;++k){
+        string rowToWrite = "";
+        for(int i = 0; i < C; ++i){
+                rowToWrite += ALPHABET[rand() % 32];
+            }
+        myfile << rowToWrite << "\n";
+    }
+
+    myfile.close();
+    return 0;
+    */
 
     encrypted = KEYinit((unsigned char *) argv[1]);
+
 
     // read in table T
     for (int i = 0; i < N; ++i) {
@@ -66,50 +84,40 @@ main(int argc, char* argv[]) {
 
     auto begin = chrono::high_resolution_clock::now();
 
-    multimap<Key, set<int>> Sub1;
+    vector<pair<Key,set<int>>> Sub1Vector;
 
     set<int> tempElement;
-    Sub1.insert(pair<Key,set<int>>(KEYinit((unsigned char *) "aaaaaaaa"), tempElement));
-
-    multimap<Key, set<int>> temp1;
-    cout << "Before: " << endl;
-    for (auto i = Sub1.begin(); i != Sub1.end(); ++i) {
-        //cout << "Key: " << i->first << ", Elements: ";
-        for (auto elem : i->second) {
-            //cout << ", " << elem;
-        }
-        cout << endl;
+    string zeroString = "";
+    for (int i = 0; i < C; ++i) {
+        zeroString += "a";
     }
+    Sub1Vector.push_back(pair<Key,set<int>>(KEYinit((unsigned char *) zeroString.c_str()), tempElement));
 
 
     for (int i = 0; i < N/2; ++i) {
         cout << "<<New iteration>>" << endl;
-        for (auto it = Sub1.begin(); it != Sub1.end(); ++it){
-            //std::this_thread::sleep_for (std::chrono::seconds(1));
+        vector<pair<Key,set<int>>> temp1;
+        for (vector<pair<Key,set<int>>>::iterator it = Sub1Vector.begin(); it != Sub1Vector.end(); ++it){
             pair<Key,set<int>> tempPair = AddToSubsetSum(*it, T[i] ,i);
-            temp1.insert(tempPair);
+            temp1.push_back(tempPair);
 
         }
-        for(auto it = temp1.begin(); it != temp1.end(); ++it){
-            //cout << "Key: " << it->first << ", Elements: ";
-            for (auto elem : it->second) {
-                //cout << ", " << elem;
-            }
-            //cout << endl;
-            //std::this_thread::sleep_for (std::chrono::milliseconds(100));
-            Sub1.insert(*it);
+        for (vector<pair<Key,set<int>>>::iterator it = temp1.begin(); it != temp1.end(); ++it){
+            Sub1Vector.push_back(*it);
         }
-        temp1.clear();
     }
-    //cout << "Sub1: " << Sub1.size() << endl;
+
 
 
     vector<string> result;
 
-    multimap<Key, set<int>> Sub2;
+    multimap<Key, set<int>> Sub1;
+    Sub1.insert(Sub1Vector.begin(), Sub1Vector.end());
+    cout << "First part done." << endl;
 
+    multimap<Key, set<int>> Sub2;
     set<int> tempElement2;
-    Sub2.insert(pair<Key,set<int>>(KEYinit((unsigned char *) "aaaaa"), tempElement2));
+    Sub2.insert(pair<Key,set<int>>(KEYinit((unsigned char *) zeroString.c_str()), tempElement2));
 
 
     auto foundValues = Sub1.equal_range(encrypted);
@@ -142,7 +150,7 @@ main(int argc, char* argv[]) {
                     cout << row;
                 }
                 cout << endl;
-                cout << "Unencrypted word: " << getDecryptedWord(KEYinit((unsigned char *) "aaaaa"),tempSet) << endl;
+                cout << "Unencrypted word: " << getDecryptedWord(KEYinit((unsigned char *) zeroString.c_str()),tempSet) << endl;
                 cout << "Sub1 part: "<< i->first << endl;
                 cout << "Sub2 part: "<< a.first << endl;
                 cout << "Encrypted: "<< encrypted << endl << endl;

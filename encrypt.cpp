@@ -17,6 +17,7 @@ using namespace std;
 int
 main(int argc, char* argv[])
 {
+
   unsigned char buffer[C+1];     // temporary string buffer
   Key password;                  // the user supplied password
   Key encrypted;                 // the encrypted password
