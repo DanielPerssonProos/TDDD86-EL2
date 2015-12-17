@@ -34,7 +34,7 @@ solution	     ormaybenot
 
 Char     Brute     
 --------------
- 4
+ 4	
  5
  6
  8
