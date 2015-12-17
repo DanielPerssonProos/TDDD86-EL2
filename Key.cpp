@@ -26,16 +26,12 @@ Key KEYsubsetsum(const Key& k, const Key T[N])  {
       sum = sum + T[i];
       rows.push_back(i);
 
-      cout << setw(2) << i << " "; // for debugging
-      cout << T[i] << endl;        // for debugging
+      //cout << setw(2) << i << " "; // for debugging
+      //cout << T[i] << endl;        // for debugging
     }
   }
 
-  cout << "Rows are: ";
-  for(int i :rows){
-      cout << i << ", ";
-  }
-  cout << endl;
+  //cout << endl;
   return sum;
 }
 

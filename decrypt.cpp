@@ -6,6 +6,7 @@
 #include <thread>
 #include <bitset>
 #include <fstream>
+#include <cmath>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ pair<Key,set<int>> AddToSubsetSum(const pair<Key,set<int>>& L, Key& addedValue, 
 
 }
 
-string getDecryptedWord(Key key, set<int> rows) {
+string getDecryptedWord(set<int> rows) {
     /*cout << "Rows: ";
     for (int row : rows) {
         cout << "," << row;
@@ -43,7 +44,15 @@ string getDecryptedWord(Key key, set<int> rows) {
     return resultString;
 }
 
-
+ set<int> getRowSet(Key rowCombination) {
+     set<int> rowSet;
+     for (int i = 0; i < N; ++i) {
+         if (KEYbit(rowCombination, i)) {
+             rowSet.insert(i);
+         }
+     }
+     return rowSet;
+ }
 
 int
 main(int argc, char* argv[]) {
@@ -74,7 +83,7 @@ main(int argc, char* argv[]) {
     */
 
     encrypted = KEYinit((unsigned char *) argv[1]);
-
+    cout << "Encrypted: " << encrypted;
 
     // read in table T
     for (int i = 0; i < N; ++i) {
@@ -93,9 +102,8 @@ main(int argc, char* argv[]) {
     }
     Sub1Vector.push_back(pair<Key,set<int>>(KEYinit((unsigned char *) zeroString.c_str()), tempElement));
 
-
-    for (int i = 0; i < 24; ++i) {
-        cout << "<<New iteration>>" << endl;
+    int tal = 2;
+    for (int i = 0; i < N/2 -tal; ++i) {
         vector<pair<Key,set<int>>> temp1;
         for (vector<pair<Key,set<int>>>::iterator it = Sub1Vector.begin(); it != Sub1Vector.end(); ++it){
             pair<Key,set<int>> tempPair = AddToSubsetSum(*it, T[i] ,i);
@@ -114,55 +122,32 @@ main(int argc, char* argv[]) {
     multimap<Key, set<int>> Sub1;
     Sub1.insert(Sub1Vector.begin(), Sub1Vector.end());
     Sub1Vector.clear();
-    cout << "First part done." << endl;
-
-    multimap<Key, set<int>> Sub2;
-    set<int> tempElement2;
-    Sub2.insert(pair<Key,set<int>>(KEYinit((unsigned char *) zeroString.c_str()), tempElement2));
+    cout << "Half way there." << endl;
 
 
     auto foundValues = Sub1.equal_range(encrypted);
     for (auto i = foundValues.first; i != foundValues.second; ++i) {
-        result.push_back(getDecryptedWord(i->first,i->second));
+        result.push_back(getDecryptedWord(i->second));
     }
 
-    multimap<Key, set<int>> temp2;
-    for (int i = 20; i < N; ++i) {
-        for (auto it : Sub2){
-            pair<Key,set<int>> tempPair = AddToSubsetSum(it, T[i] ,i);
-            temp2.insert(tempPair);
-            }
+    string combinationString = "";
+    for (int i = 0; i < C-1; ++i) {
+        combinationString += "a";
+    }
+    combinationString += "b";
 
-        for(auto a : temp2){
-            foundValues = Sub1.equal_range(encrypted-a.first);
-            for (auto i = foundValues.first; i != foundValues.second; ++i) {
-                set<int> tempSet = a.second;
-                tempSet.insert(i->second.begin(), i->second.end());
-                result.push_back(getDecryptedWord(i->first,tempSet));
-                cout << "Rows: ";
-                bool firstIteration = true;
-                for (int row : tempSet) {
-                    if (!firstIteration) {
-                        cout << ",";
-                    } else {
-                        firstIteration = false;
-                    }
-                    cout << row;
-                }
-                cout << endl;
-                cout << "Unencrypted word: " << getDecryptedWord(KEYinit((unsigned char *) zeroString.c_str()),tempSet) << endl;
-                cout << "Sub1 part: "<< i->first << endl;
-                cout << "Sub2 part: "<< a.first << endl;
-                cout << "Encrypted: "<< encrypted << endl << endl;
-                tempSet.clear();
-            }
-
-
-            Sub2.insert(a);
+    Key rowCombination = KEYinit((unsigned char*) combinationString.c_str());
+    for (int i = 0; i < pow(2.0,N/2+(N%2)+tal)-1; ++i) {
+        Key subsetSum = KEYsubsetsum(rowCombination,T);
+        foundValues = Sub1.equal_range(encrypted-subsetSum);
+        set<int> rowSet = getRowSet(rowCombination);
+        for (auto i = foundValues.first; i != foundValues.second; ++i) {
+            set<int> tempSet = i->second;
+            tempSet.insert(rowSet.begin(),rowSet.end());
+            result.push_back(getDecryptedWord(tempSet));
         }
-        temp2.clear();
+        ++rowCombination;
     }
-    cout << "Sub2: " << Sub2.size() << endl;
 
 
 
