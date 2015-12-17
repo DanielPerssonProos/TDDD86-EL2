@@ -101,8 +101,8 @@ main(int argc, char* argv[]) {
     }
     Sub1Vector.push_back(pair<Key,set<int>>(KEYinit((unsigned char *) zeroString.c_str()), tempElement));
 
-    int tal = 1;
-    for (int i = 0; i < N/2 -tal; ++i) {
+    int offset = 2;
+    for (int i = 0; i < N/2 -offset; ++i) {
         vector<pair<Key,set<int>>> temp1;
         for (vector<pair<Key,set<int>>>::iterator it = Sub1Vector.begin(); it != Sub1Vector.end(); ++it){
             pair<Key,set<int>> tempPair = AddToSubsetSum(*it, T[i] ,i);
@@ -136,7 +136,7 @@ main(int argc, char* argv[]) {
     combinationString += "b";
 
     Key rowCombination = KEYinit((unsigned char*) combinationString.c_str());
-    for (int i = 0; i < pow(2.0,N/2+(N%2)+tal)-1; ++i) {
+    for (int i = 0; i < pow(2.0,N/2+(N%2)+offset)-1; ++i) {
         Key subsetSum = KEYsubsetsum(rowCombination,T);
         foundValues = Sub1.equal_range(encrypted-subsetSum);
         set<int> rowSet = getRowSet(rowCombination);
@@ -148,7 +148,10 @@ main(int argc, char* argv[]) {
         ++rowCombination;
     }
 
-
+    auto end = chrono::high_resolution_clock::now();
+    cout << "Decryption took "
+         << std::chrono::duration_cast<chrono::seconds>(end - begin).count()
+         << " seconds." << endl;
 
 
     cout << "Found possible passwords:" << endl;
