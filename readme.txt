@@ -20,9 +20,10 @@
 
 8 bokstäver         10 bokstäver
 -----------         ------------
-
-
-
+congrats	     completely
+youfound	     unbreakabl
+theright	     cryptogram
+solution	     ormaybenot
 
 /****************************************************************************
  *  Hur lång tid använder brute.cpp för att knäcka lösenord av en viss 

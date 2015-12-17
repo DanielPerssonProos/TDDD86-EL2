@@ -101,7 +101,7 @@ main(int argc, char* argv[]) {
     }
     Sub1Vector.push_back(pair<Key,set<int>>(KEYinit((unsigned char *) zeroString.c_str()), tempElement));
 
-    int offset = 2;
+    int offset =0;
     for (int i = 0; i < N/2 -offset; ++i) {
         vector<pair<Key,set<int>>> temp1;
         for (vector<pair<Key,set<int>>>::iterator it = Sub1Vector.begin(); it != Sub1Vector.end(); ++it){

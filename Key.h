@@ -10,7 +10,7 @@
 
 using namespace std;
 
-static const int C = 10;               // number of characters in password
+static const int C = 8;               // number of characters in password
 static const int B = 5;         // number of bits per character
 static const int R = (1 << B);  // size of alphabet (32)
 static const int N = (B * C);   // number of bits per password
