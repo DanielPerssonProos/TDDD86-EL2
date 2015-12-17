@@ -83,7 +83,6 @@ main(int argc, char* argv[]) {
     */
 
     encrypted = KEYinit((unsigned char *) argv[1]);
-    cout << "Encrypted: " << encrypted;
 
     // read in table T
     for (int i = 0; i < N; ++i) {
@@ -102,7 +101,7 @@ main(int argc, char* argv[]) {
     }
     Sub1Vector.push_back(pair<Key,set<int>>(KEYinit((unsigned char *) zeroString.c_str()), tempElement));
 
-    int tal = 2;
+    int tal = 1;
     for (int i = 0; i < N/2 -tal; ++i) {
         vector<pair<Key,set<int>>> temp1;
         for (vector<pair<Key,set<int>>>::iterator it = Sub1Vector.begin(); it != Sub1Vector.end(); ++it){
