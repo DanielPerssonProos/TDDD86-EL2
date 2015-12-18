@@ -44,8 +44,11 @@ Char     Brute
 --------------
  4	 1.843s
  5	73.693s
- 6
- 8
+ 6	3017s * 
+ 8	5058857s * 
+
+(* Vi beräknade en ungefärlig formel och stoppade in värdena som skulle beräknas)
+
 
 
 /******************************************************************************
@@ -61,7 +64,10 @@ Char    Tid (sekunder)    Minne (bytes)
 6		 0.746		fšr snabb
 8		25.516		 ~750000000
 10		1678.756	~5174000000
-12
+12		>10h *		~5174000000
+
+Vi uppskattade att minnesåtgången skulle vara den samma för 12 chars som för 10 chars då vi valde att göra den minneskrävande
+delen lika stor för båda.
 
 /*************************************************************************
  * Hur många operationer använder brute.cpp för ett N-bitars lösenord?
