@@ -101,7 +101,7 @@ main(int argc, char* argv[]) {
     }
     Sub1Vector.push_back(pair<Key,set<int>>(KEYinit((unsigned char *) zeroString.c_str()), tempElement));
 
-    int offset =0;
+    int offset = 6;
     for (int i = 0; i < N/2 -offset; ++i) {
         vector<pair<Key,set<int>>> temp1;
         for (vector<pair<Key,set<int>>>::iterator it = Sub1Vector.begin(); it != Sub1Vector.end(); ++it){
@@ -149,9 +149,7 @@ main(int argc, char* argv[]) {
     }
 
     auto end = chrono::high_resolution_clock::now();
-    cout << "Decryption took "
-         << std::chrono::duration_cast<chrono::seconds>(end - begin).count()
-         << " seconds." << endl;
+    cout << "Decryption took " << std::chrono::duration_cast<chrono::milliseconds>(end - begin).count() << " milliseconds." << endl;
 
 
     cout << "Found possible passwords:" << endl;
