@@ -18,7 +18,9 @@ lšsenordet.
 /**********************************************************************
  *  Beskriv symboltabellen du använt för decrypt.cpp.
  **********************************************************************/
-
+Som symboltabell har vi använt en multimap. Detta utifall flera olika kombinationer
+skapar samma summa. Det skulle leda till att det finns flera kandidater till lösenordet
+som alla kan vara rätt.
 
 /**********************************************************************
  *  Ge de dekrypterade versionerna av alla lösenord med 8 och 10
