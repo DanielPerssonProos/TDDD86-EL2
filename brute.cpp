@@ -53,8 +53,8 @@ main(int argc, char* argv[])
 
   auto end = chrono::high_resolution_clock::now();
   cout << "Decryption took "
-       << std::chrono::duration_cast<chrono::seconds>(end - begin).count()
-       << " seconds." << endl;
+       << std::chrono::duration_cast<chrono::milliseconds>(end - begin).count()
+       << " millis." << endl;
 
   return 0;
 }
